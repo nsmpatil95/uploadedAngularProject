@@ -1,0 +1,73 @@
+<div class="container table-container">
+  <div class="col-md-12 pull-right">
+    <button mat-flat-button color="primary" (click)="back()">Back</button>
+  </div>
+  <mat-form-field appearance="standard" class="full-width">
+    <mat-label>Filter</mat-label>
+    <input
+      matInput
+      (keyup)="applyFilter($event)"
+      placeholder="Search Columns"
+      #input
+    />
+  </mat-form-field>
+  <div class="col-md-12">
+    <table
+      mat-table
+      matSort
+      #tableSort="matSort"
+      [dataSource]="dataSource"
+      class="col-md-12"
+    >
+      <!-- all Column -->
+      <ng-container
+        *ngFor="let col of columnArr; let i = index"
+        [matColumnDef]="col"
+      >
+        <span *ngIf="i === 0">
+          <th mat-header-cell *matHeaderCellDef>
+            <!--  <mat-checkbox
+            (click)="selectedRow('selectedAll', $event)"
+            (change)="$event ? masterToggle() : null"
+            [checked]="selection.hasValue() && isAllSelected()"
+            [indeterminate]="selection.hasValue() && !isAllSelected()"
+          >
+          </mat-checkbox> -->
+            Delete
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <mat-checkbox
+              (click)="selectedRow(row, $event)"
+              (change)="$event ? selection.toggle(row) : null"
+              [checked]="selection.isSelected(row)"
+            >
+            </mat-checkbox>
+          </td>
+        </span>
+        <span *ngIf="i !== 0">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ col }}</th>
+          <td mat-cell *matCellDef="let element">{{ element[col] }}</td>
+        </span>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columnArr"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: columnArr"
+        (click)="selection.toggle(row)"
+      ></tr>
+    </table>
+    <mat-paginator
+      class="col-md-12"
+      [pageSizeOptions]="[5, 10, 20]"
+      showFirstLastButtons
+      aria-label="Select page of periodic elements"
+    >
+    </mat-paginator>
+  </div>
+  <ng-container *ngIf="data.length == 0" class="col-md-12">
+    <label
+      >No Records found.Please create records by clicking BACK button</label
+    >
+  </ng-container>
+</div>
